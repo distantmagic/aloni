@@ -9,6 +9,8 @@ class WebSocketResponderAggregate:
         receive: ASGIReceiveCallable,
         send: ASGISendCallable,
     ):
+        assert scope["type"] == "websocket"
+
         pprint.pp(scope)
 
         while True:

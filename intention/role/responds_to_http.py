@@ -2,7 +2,6 @@ from typing import Type, Union
 
 from .responds_to_http_wrapped import responds_to_http_wrapped
 from .role_builder import RoleBuilder
-from .role_regsitry_global import role_registry_global
 
 
 class responds_to_http(RoleBuilder):

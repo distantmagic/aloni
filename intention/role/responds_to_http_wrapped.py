@@ -1,7 +1,6 @@
 from typing import Type, Union
 
 from .role import Role
-from .role_regsitry_global import role_registry_global
 
 
 class responds_to_http_wrapped(Role):

@@ -16,6 +16,8 @@ class LifespanResponderAggregate:
         receive: ASGIReceiveCallable,
         send: ASGISendCallable,
     ):
+        assert scope["type"] == "lifespan"
+
         while True:
             message = await receive()
 

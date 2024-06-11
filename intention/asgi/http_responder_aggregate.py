@@ -1,4 +1,3 @@
-import pprint
 from asgiref.typing import ASGIReceiveCallable, ASGISendCallable, HTTPScope
 
 from ..http.router import Router
@@ -18,6 +17,8 @@ class HTTPResponderAggregate:
         receive: ASGIReceiveCallable,
         send: ASGISendCallable,
     ):
+        assert scope["type"] == "http"
+
         request = Request(path=scope["path"])
 
         while True:
@@ -45,7 +46,6 @@ class HTTPResponderAggregate:
                         )
                     else:
                         response = await responder.respond(request)
-                        print(response.contents)
 
                         await send(
                             {

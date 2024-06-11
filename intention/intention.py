@@ -1,7 +1,4 @@
-import pprint
-
 from .http.router import Router
-from .role import singleton
 from .role.responds_to_http_wrapped import responds_to_http_wrapped
 from .role.role_registry import RoleRegistry
 

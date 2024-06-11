@@ -1,4 +1,3 @@
-import inspect
 from typing import Type
 
 from .role import Role
