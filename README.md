@@ -36,29 +36,38 @@ Intention allows you to inject services into your responders and other modules.
 It is possible to create service providers for more advanced use cases.
 
 ```py
-from ..application_module_provider import ApplicationModuleProvider
-from ..role.service_provider import service_provider
-from .service_provider import ServiceProvider
+from intention.role import service_provider
+from intention.service_provider.service_provider import ServiceProvider
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 
 @service_provider(provides=Environment)
 class JinjaEnvironmentServiceProvider(ServiceProvider[Environment]):
-    def __init__(
-        self,
-        application_module_provider: ApplicationModuleProvider,
-    ):
-        self.application_module_provider = application_module_provider
-
     def provide(self) -> Environment:
         return Environment(
             auto_reload=False,
             enable_async=True,
-            loader=PackageLoader(
-                self.application_module_provider.get_module().__name__,
-            ),
+            loader=PackageLoader('mymodule'),
             autoescape=select_autoescape(),
         )
+```
+
+Then, you can inject the service into your responders and other modules. 
+
+No further configuration is needed.
+
+```py
+from intention.role import service
+from jinja2 import Environment
+
+
+@service
+class MyService:
+    def __init__(self, env: Environment):
+        self.env = env
+
+    async def render_something(self):
+        return self.env.get_template('foo.j2').render()
 ```
 
 ## Why Intention?
