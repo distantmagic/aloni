@@ -9,22 +9,21 @@ from .asgi import (
     LifespanResponderAggregate,
     WebSocketResponderAggregate,
 )
-from .intention import Intention
+from .dependency_injection_container import DependencyInjectionContainer
+from .import_all_from import import_all_from
 from .role.role_regsitry_global import role_registry_global
-from .http.router import Router
+from .service_provider import *  # noqa: F403
 
 
-def create_asgi_handler():
-    intention = Intention(
-        role_registry=role_registry_global,
-        router=Router(),
-    )
+def create_asgi_handler(module):
+    import_all_from(module)
 
-    http_responder_aggregate = HTTPResponderAggregate(
-        router=intention.router,
-    )
-    lifespan_responder_aggregate = LifespanResponderAggregate(intention)
-    websocket_responder_aggregate = WebSocketResponderAggregate()
+    di = DependencyInjectionContainer(role_registry=role_registry_global)
+    di.prepare()
+
+    http_responder_aggregate = di.make(HTTPResponderAggregate)
+    lifespan_responder_aggregate = di.make(LifespanResponderAggregate)
+    websocket_responder_aggregate = di.make(WebSocketResponderAggregate)
 
     async def asgi_handler(
         scope: Scope,

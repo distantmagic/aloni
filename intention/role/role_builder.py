@@ -16,8 +16,7 @@ class RoleBuilder(ABC):
     def __call__(self, wrapped):
         if inspect.isclass(wrapped):
             return self.wrap_with_role(wrapped)
+        elif isinstance(wrapped, Role):
+            return self.wrap_with_role(get_root_class(wrapped))
         else:
-            if isinstance(wrapped, Role):
-                return self.wrap_with_role(get_root_class(wrapped))
-            else:
-                raise Exception("Roles can only wrap classes or other roles.")
+            raise Exception("Roles can only wrap classes or other roles.")

@@ -2,8 +2,10 @@ from granian.rsgi import HTTPProtocol, Scope
 
 from ..http.router import Router
 from ..httpfoundation import Request
+from ..role.service import service
 
 
+@service
 class HTTPResponderAggregate:
     def __init__(
         self,
@@ -23,7 +25,9 @@ class HTTPResponderAggregate:
 
         if responder is None:
             proto.response_str(
-                status=404, headers=[("content-type", "text/plain")], body="Not found"
+                status=404,
+                headers=[("content-type", "text/plain")],
+                body="Not found",
             )
         else:
             response = await responder.respond(request)

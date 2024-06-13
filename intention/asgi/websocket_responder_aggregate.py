@@ -1,7 +1,12 @@
+# mypy: ignore-errors
+
 from asgiref.typing import ASGIReceiveCallable, ASGISendCallable, WebSocketScope
 import pprint
 
+from ..role.service import service
 
+
+@service
 class WebSocketResponderAggregate:
     async def respond_to_websocket(
         self,

@@ -4,7 +4,7 @@ fmt:
 
 .PHONY: lint
 lint:
-	ruff check
+	ruff check && mypy ./intention
 
 .PHONY: start
 start:

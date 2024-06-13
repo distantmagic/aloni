@@ -1,9 +1,13 @@
+# mypy: ignore-errors
+
 from asgiref.typing import ASGIReceiveCallable, ASGISendCallable, HTTPScope
 
 from ..http.router import Router
 from ..httpfoundation import Request
+from ..role.service import service
 
 
+@service
 class HTTPResponderAggregate:
     def __init__(
         self,

@@ -1,5 +1,5 @@
 from .role import Role
 
 
-class singleton(Role):
+class service(Role):
     pass

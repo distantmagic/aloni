@@ -1,28 +1,24 @@
-import asyncio
 from typing import Union
 from granian.rsgi import HTTPProtocol, Scope, WebsocketProtocol
 
-from .intention import Intention
-from .http.router import Router
+from .dependency_injection_container import DependencyInjectionContainer
+from .import_all_from import import_all_from
 from .role.role_regsitry_global import role_registry_global
 from .rsgi import (
     HTTPResponderAggregate,
     WebSocketResponderAggregate,
 )
+from .service_provider import *  # noqa: F403
 
 
-def create_rsgi_handler():
-    intention = Intention(
-        role_registry=role_registry_global,
-        router=Router(),
-    )
+def create_rsgi_handler(module):
+    import_all_from(module)
 
-    http_responder_aggregate = HTTPResponderAggregate(
-        router=intention.router,
-    )
-    websocket_responder_aggregate = WebSocketResponderAggregate()
+    di = DependencyInjectionContainer(role_registry=role_registry_global)
+    di.prepare()
 
-    asyncio.run(intention.startup())
+    http_responder_aggregate = di.make(HTTPResponderAggregate)
+    websocket_responder_aggregate = di.make(WebSocketResponderAggregate)
 
     async def rsgi_handler(
         scope: Scope,
