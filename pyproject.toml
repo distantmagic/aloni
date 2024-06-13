@@ -1,3 +1,10 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+repository = "https://github.com/distantmagic/intention"
+
 [tool.poetry]
 name = "intention"
 version = "0.1.0"
@@ -18,7 +25,3 @@ pydeps = "^1.12.20"
 pytest = "^8.2.2"
 ruff = "^0.4.8"
 mypy = "^1.10.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
