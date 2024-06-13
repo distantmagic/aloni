@@ -4,6 +4,18 @@ Intention is a Python framework designed to simplify the development of IO-bound
 
 Whether you're building web applications or other async services, Intention streamlines your development process with ease.
 
+## Installation
+
+```
+pip install intention
+```
+
+or
+
+```
+poetry add intention
+```
+
 ## Key Features
 
 - **Role-Based Services**: Organize your services with unique roles using simple decorators like @responds_to_http. Each service in the dependency injection container plays a specific role, making your code more modular and maintainable.
@@ -11,7 +23,11 @@ Whether you're building web applications or other async services, Intention stre
 - **Async-First**: Built with ASGI and RSGI support, Intention is optimized for asynchronous programming, making it perfect for IO-bound tasks.
 - **Developer-Friendly**: Designed to be accessible for junior developers while providing powerful features for experienced programmers.
 
-## Suitable for Bigger Projects
+## Why Intention?
+
+Intention's unique Role-Based Services approach allows for clear and organized code, facilitating collaboration and maintenance. Its async-first design ensures your applications are performant and scalable, catering to a wide range of applications beyond just web development.
+
+### Suitable for Bigger Projects
 
 Intention allows you to split your HTTP responders and other modules among multiple files, facilitating easy maintenance and scalability.
 
@@ -29,7 +45,7 @@ class Homepage(Responder):
         return JinjaResponse("homepage.j2")
 ```
 
-## Dependency Injections
+### Dependency Injection
 
 Intention allows you to inject services into your responders and other modules.
 
@@ -54,7 +70,7 @@ class JinjaEnvironmentServiceProvider(ServiceProvider[Environment]):
 
 Then, you can inject the service into your responders and other modules. 
 
-No further configuration is needed.
+No further configuration is needed (just the type hint).
 
 ```py
 from intention.role import service
@@ -69,7 +85,3 @@ class MyService:
     async def render_something(self):
         return self.env.get_template('foo.j2').render()
 ```
-
-## Why Intention?
-
-Intention's unique Role-Based Services approach allows for clear and organized code, facilitating collaboration and maintenance. Its async-first design ensures your applications are performant and scalable, catering to a wide range of applications beyond just web development.
