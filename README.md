@@ -1,4 +1,4 @@
-# Intention
+# Intention (work in progress)
 
 Intention is a Python framework designed to simplify the development of IO-bound applications with an innovative Role-Based Services approach. 
 
