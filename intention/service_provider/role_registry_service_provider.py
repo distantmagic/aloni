@@ -8,5 +8,5 @@ from .service_provider import ServiceProvider
 # a part of DI container itself, but I didn't want to make exceptions for it
 @service_provider(provides=RoleRegistry)
 class RoleRegistryServiceProvider(ServiceProvider[RoleRegistry]):
-    def provide(self, role_registry: RoleRegistry) -> RoleRegistry:
+    def provide(self) -> RoleRegistry:
         return role_registry_global

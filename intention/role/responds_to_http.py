@@ -1,3 +1,4 @@
+from http import HTTPMethod
 from typing import Type, Union
 
 from .responds_to_http_wrapped import responds_to_http_wrapped
@@ -8,7 +9,7 @@ class responds_to_http(RoleBuilder):
     def __init__(
         self,
         pattern: str,
-        method: str = "get",
+        method: HTTPMethod = HTTPMethod.GET,
         description: Union[None, str] = None,
         name: Union[None, str] = None,
     ):

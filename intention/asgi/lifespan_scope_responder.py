@@ -7,7 +7,7 @@ from ..role.service import service
 
 
 @service
-class LifespanResponderAggregate:
+class LifespanScopeResponder:
     async def respond_to_lifespan(
         self,
         scope: LifespanScope,

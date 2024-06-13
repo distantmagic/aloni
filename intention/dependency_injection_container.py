@@ -100,11 +100,11 @@ class DependencyInjectionContainer:
         instantiated_service = None
 
         if isinstance(instantiated_provider, ServiceProvider):
-            instantiated_service = instantiated_provider.provide(self.role_registry)
+            instantiated_service = instantiated_provider.provide()
         else:
             instantiated_service = instantiated_provider
 
-        self.instantiated_services[cls] = instantiated_service
+        self.register_instance(cls, instantiated_service)
 
         return instantiated_service
 
@@ -139,3 +139,6 @@ class DependencyInjectionContainer:
                 )
 
             self.service_providers_roles[provided_class] = (role, wrapped_class)
+
+    def register_instance(self, cls, instance):
+        self.instantiated_services[cls] = instance

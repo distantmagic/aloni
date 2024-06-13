@@ -1,10 +1,10 @@
 # redundant imports, see:
 # https://docs.astral.sh/ruff/rules/unused-import/
 
-from .http_responder_aggregate import HTTPResponderAggregate as HTTPResponderAggregate
-from .lifespan_responder_aggregate import (
-    LifespanResponderAggregate as LifespanResponderAggregate,
+from .http_scope_responder import HTTPScopeResponder as HTTPScopeResponder
+from .lifespan_scope_responder import (
+    LifespanScopeResponder as LifespanScopeResponder,
 )
-from .websocket_responder_aggregate import (
-    WebSocketResponderAggregate as WebSocketResponderAggregate,
+from .websocket_scope_responder import (
+    WebSocketScopeResponder as WebSocketScopeResponder,
 )

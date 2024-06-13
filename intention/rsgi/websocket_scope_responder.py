@@ -4,7 +4,7 @@ from ..role.service import service
 
 
 @service
-class WebSocketResponderAggregate:
+class WebSocketScopeResponder:
     async def respond_to_websocket(
         self,
         scope: Scope,

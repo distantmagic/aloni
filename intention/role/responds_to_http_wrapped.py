@@ -1,3 +1,4 @@
+from http import HTTPMethod
 from typing import Type, Union
 
 from .service import service
@@ -8,9 +9,9 @@ class responds_to_http_wrapped(service):
         self,
         classname: Type,
         pattern: str,
-        method: str = "get",
-        description: Union[None, str] = None,
-        name: Union[None, str] = None,
+        method: HTTPMethod,
+        description: Union[None, str],
+        name: Union[None, str],
     ):
         service.__init__(self, classname)
 

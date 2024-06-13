@@ -3,11 +3,11 @@ from asgiref.typing import (
     ASGISendCallable,
     Scope,
 )
-
+from .application_module_provider import ApplicationModuleProvider
 from .asgi import (
-    HTTPResponderAggregate,
-    LifespanResponderAggregate,
-    WebSocketResponderAggregate,
+    HTTPScopeResponder,
+    LifespanScopeResponder,
+    WebSocketScopeResponder,
 )
 from .dependency_injection_container import DependencyInjectionContainer
 from .import_all_from import import_all_from
@@ -20,10 +20,11 @@ def create_asgi_handler(module):
 
     di = DependencyInjectionContainer(role_registry=role_registry_global)
     di.prepare()
+    di.register_instance(ApplicationModuleProvider, ApplicationModuleProvider(module))
 
-    http_responder_aggregate = di.make(HTTPResponderAggregate)
-    lifespan_responder_aggregate = di.make(LifespanResponderAggregate)
-    websocket_responder_aggregate = di.make(WebSocketResponderAggregate)
+    http_scope_responder = di.make(HTTPScopeResponder)
+    lifespan_scope_responder = di.make(LifespanScopeResponder)
+    websocket_scope_responder = di.make(WebSocketScopeResponder)
 
     async def asgi_handler(
         scope: Scope,
@@ -32,19 +33,19 @@ def create_asgi_handler(module):
     ):
         match scope["type"]:
             case "http":
-                await http_responder_aggregate.respond_to_http(
+                await http_scope_responder.respond_to_http(
                     scope,
                     receive,
                     send,
                 )
             case "lifespan":
-                await lifespan_responder_aggregate.respond_to_lifespan(
+                await lifespan_scope_responder.respond_to_lifespan(
                     scope,
                     receive,
                     send,
                 )
             case "websocket":
-                await websocket_responder_aggregate.respond_to_websocket(
+                await websocket_scope_responder.respond_to_websocket(
                     scope,
                     receive,
                     send,

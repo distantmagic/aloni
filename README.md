@@ -1,6 +1,8 @@
 # Intention
 
-Intention is a Python framework designed to simplify the development of IO-bound applications with an innovative Role-Based Services approach. Whether you're building web applications or other async services, Intention streamlines your development process with ease.
+Intention is a Python framework designed to simplify the development of IO-bound applications with an innovative Role-Based Services approach. 
+
+Whether you're building web applications or other async services, Intention streamlines your development process with ease.
 
 ## Key Features
 

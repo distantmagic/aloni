@@ -1,11 +1,21 @@
 from typing import Type
+
 from ..httpfoundation import Response
-from .role import Role
+from .intercepts_http_response_wrapped import intercepts_http_response_wrapped
+from .role_builder import RoleBuilder
 
 
-class intercepts_http_response(Role):
-    def __init__(self, name: Type[Response]):
-        pass
+class intercepts_http_response(RoleBuilder):
+    def __init__(
+        self,
+        response_cls: Type[Response],
+    ):
+        RoleBuilder.__init__(self)
 
-    def __call__(self, cls):
-        return cls
+        self.response_cls = response_cls
+
+    def wrap_with_role(self, cls: Type):
+        return intercepts_http_response_wrapped(
+            classname=cls,
+            response_cls=self.response_cls,
+        )
