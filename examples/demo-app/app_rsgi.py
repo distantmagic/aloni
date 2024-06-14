@@ -1,8 +1,8 @@
 from intention import create_rsgi_handler
 
-import intention_app
+import demo_app
 
-rsgi_handler = create_rsgi_handler(intention_app)
+rsgi_handler = create_rsgi_handler(demo_app)
 
 
 async def app(scope, proto):

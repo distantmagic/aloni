@@ -85,3 +85,7 @@ class MyService:
     async def render_something(self):
         return self.env.get_template('foo.j2').render()
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
