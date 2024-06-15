@@ -1,4 +1,5 @@
-from typing import Awaitable, Callable, Union
+from pathlib import Path
+from typing import Awaitable, Callable, Optional, Union
 from granian.constants import Interfaces
 from granian.rsgi import HTTPProtocol, Scope, WebsocketProtocol  # type: ignore
 from granian.server import Granian
@@ -17,6 +18,12 @@ from .command_option import CommandOption
     name="serve",
     description="Start the app in HTTP server mode",
     options=[
+        CommandOption(
+            name="--blocking-threads",
+            type=int,
+            help="Number of blocking threads (per worker)",
+            default=1,
+        ),
         CommandOption(
             name="--host",
             type=str,
@@ -48,10 +55,22 @@ from .command_option import CommandOption
             default=None,
         ),
         CommandOption(
+            name="--threads",
+            type=int,
+            help="Number of threads (per worker)",
+            default=1,
+        ),
+        CommandOption(
             name="--url-path-prefix",
             type=str,
             help="URL path prefix the app is mounted on",
             default=None,
+        ),
+        CommandOption(
+            name="--workers",
+            type=int,
+            help="Number of worker processes",
+            default=1,
         ),
     ],
 )
@@ -68,12 +87,30 @@ class Serve(Command):
         self.http_scope_responder = http_scope_responder
         self.websocket_scope_responder = websocket_scope_responder
 
-    def respond(self) -> int:
+    def respond(
+        self,
+        blocking_threads: int,
+        host: str,
+        port: int,
+        reload: bool,
+        ssl_certificate: Optional[str],
+        ssl_keyfile: Optional[str],
+        threads: int,
+        url_path_prefix: str,
+        workers: int,
+    ) -> int:
         server = Granian(
             self.application_state.root_module.__name__,
+            blocking_threads=blocking_threads,
             interface=Interfaces.RSGI,
+            port=port,
+            reload=reload,
+            ssl_cert=Path(ssl_certificate) if ssl_certificate is not None else None,
+            ssl_key=Path(ssl_keyfile) if ssl_keyfile is not None else None,
+            threads=threads,
+            url_path_prefix=url_path_prefix,
             websockets=False,
-            workers=2,
+            workers=workers,
         )
 
         server.serve(target_loader=self.load_target)

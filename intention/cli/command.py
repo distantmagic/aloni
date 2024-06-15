@@ -1,7 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class Command(ABC):
-    @abstractmethod
-    def respond(self) -> int:
-        pass
+    pass
