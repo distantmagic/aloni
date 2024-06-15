@@ -22,7 +22,7 @@ lint:
 		--warn-return-any \
 		--warn-unreachable \
 		--warn-unused-ignores \
-		./intention
+		./demo_app
 
 .PHONY: start.asgi
 start.asgi:

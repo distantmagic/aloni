@@ -5,5 +5,5 @@ from intention.httpfoundation import Request
 
 @responds_to_http(pattern="/ping")
 class Ping(Responder):
-    async def respond(self, request: Request):
+    async def respond(self, request: Request) -> TextResponse:
         return TextResponse("pong")
