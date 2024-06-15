@@ -10,6 +10,7 @@ from .cli.command_option import CommandOption
 from .dependency_injection_container import DependencyInjectionContainer
 from .import_all_from import import_all_from
 from .meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
+from .meta.function_parameter_store import FunctionParameterStore
 from .meta.is_responder import is_responder
 from .role.responds_to_cli_wrapped import responds_to_cli_wrapped
 from .role.role import Role
@@ -72,13 +73,22 @@ def start(
         return 0
 
     if args.command not in available_commands:
-        raise Exception(f"Command {args.command} not found")
+        raise ValueError(f"Command {args.command} not found")
 
     command = di.make(available_commands[args.command])
 
-    if not is_responder(command, return_type=int):
+    if not is_responder(command):
         raise NotImplementedError(
-            "command must have a 'respond' method that returns an int"
+            f"command {args.command} must have a 'respond' method that returns an int"
         )
 
-    return ArgumentMatchingFunctionCaller(args).call_function(command.respond)
+    args_dict = vars(args)
+    exit_code = ArgumentMatchingFunctionCaller(
+        args=args_dict,
+        function_parameter_store=di.make(FunctionParameterStore),
+    ).call_function(command.respond)
+
+    if not isinstance(exit_code, int):
+        raise ValueError(f"expected int as exit code, got {type(exit_code)}")
+
+    return exit_code

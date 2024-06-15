@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any
 
 from ..httpfoundation.renderable_response import RenderableResponse
 from ..httpfoundation.request import Request
@@ -7,23 +7,26 @@ from ..role.service import service
 from .exception_response import ExceptionResponse
 from .response_interceptor_aggregate import ResponseInterceptorAggregate
 from .responder import Responder
+from .responder_caller import ResponderCaller
 from .router import Router
 
 
 @service
-class RecursiveResponseProducer:
+class RecursiveResponderAggregate:
     def __init__(
         self,
+        responder_caller: ResponderCaller,
         response_interceptor_aggregate: ResponseInterceptorAggregate,
         router: Router,
     ):
+        self.responder_caller = responder_caller
         self.response_interceptor_aggregate = response_interceptor_aggregate
         self.router = router
 
     async def produce_response(self, request: Request) -> RenderableResponse:
         try:
             responder = self.router.match_responder(request)
-            response = await responder.respond(request)
+            response = await self.responder_caller.call_responder(request, responder)
 
             return await self.process_response(request, response)
         except Exception as err:
@@ -48,12 +51,15 @@ class RecursiveResponseProducer:
     async def process_response(
         self,
         request: Request,
-        response: Union[Response, Responder],
+        response: Any,
     ) -> RenderableResponse:
         if isinstance(response, RenderableResponse):
             return await self.process_interceptors(request, response)
         elif isinstance(response, Responder):
-            return await self.process_response(request, await response.respond(request))
+            return await self.process_response(
+                request=request,
+                response=await self.responder_caller.call_responder(request, response),
+            )
         elif isinstance(response, Response):
             return await self.process_interceptors(request, response)
         else:

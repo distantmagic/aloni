@@ -1,7 +1,6 @@
 from http import HTTPMethod
 from intention.role import responds_to_http
 from intention.http import Responder, TextResponse
-from intention.httpfoundation import Request
 
 
 @responds_to_http(
@@ -11,5 +10,5 @@ from intention.httpfoundation import Request
     pattern="/health",
 )
 class Health(Responder):
-    async def respond(self, request: Request) -> TextResponse:
+    async def respond(self) -> TextResponse:
         return TextResponse("HEALTH OK!")

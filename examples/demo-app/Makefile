@@ -4,7 +4,8 @@ fmt:
 
 .PHONY: lint
 lint:
-	ruff check && mypy \
+	ruff check
+	mypy \
 		--disallow-any-decorated \
 		--disallow-any-explicit \
 		--disallow-any-expr \

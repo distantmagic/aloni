@@ -2,6 +2,7 @@ from typing import Annotated
 
 from ..http.not_found_responder import NotFoundResponder
 from ..http.responder import Responder
+from ..http.responder_caller import ResponderCaller
 from ..http.router import Router
 from ..role.responds_to_http_wrapped import responds_to_http_wrapped
 from ..role.service_provider import service_provider
@@ -15,6 +16,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
     def __init__(
         self,
         not_found_responder: NotFoundResponder,
+        responder_caller: ResponderCaller,
         service_collection: Annotated[
             ServiceColletion,
             HasRole(responds_to_http_wrapped),
@@ -23,6 +25,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         ServiceProvider.__init__(self)
 
         self.not_found_responder = not_found_responder
+        self.responder_caller = responder_caller
         self.service_collection = service_collection
 
     def provide(self) -> Router:
@@ -36,6 +39,8 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
 
             if not isinstance(responder, Responder):
                 raise Exception(f"expected {Responder} got {responder}")
+
+            self.responder_caller.prepare_for(responder)
 
             router.register_route(
                 pattern=role.pattern,
