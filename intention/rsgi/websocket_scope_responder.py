@@ -1,4 +1,4 @@
-from granian.rsgi import WebsocketProtocol, Scope
+from granian.rsgi import WebsocketProtocol, Scope  # type: ignore
 
 from ..role.service import service
 
@@ -9,5 +9,5 @@ class WebSocketScopeResponder:
         self,
         scope: Scope,
         proto: WebsocketProtocol,
-    ):
+    ) -> None:
         assert scope.proto == "ws"

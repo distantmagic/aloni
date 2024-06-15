@@ -1,19 +1,21 @@
 import inspect
 from abc import ABC, abstractmethod
-from typing import Type
+from typing import Any, Generic, Type, TypeVar, Union
 
 from .get_root_class import get_root_class
 from .role import Role
 
+TRole = TypeVar("TRole", bound=Role[Any])
 
-class RoleBuilder(ABC):
+
+class RoleBuilder(ABC, Generic[TRole]):
     @abstractmethod
-    def wrap_with_role(self, cls: Type) -> Role:
+    def wrap_with_role(self, cls: Type[Any]) -> TRole:
         pass
 
     # decorator can wrap either a class or an object wrapped by a different
     # decorator
-    def __call__(self, wrapped):
+    def __call__(self, wrapped: Union[object, Type[Any]]) -> TRole:
         if inspect.isclass(wrapped):
             return self.wrap_with_role(wrapped)
         elif isinstance(wrapped, Role):

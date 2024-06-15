@@ -7,4 +7,3 @@ from .intercepts_http_response import (
 from .responds_to_http import responds_to_http as responds_to_http
 from .service import service as service
 from .service_provider import service_provider as service_provider
-from .uses_middleware import uses_middleware as uses_middleware

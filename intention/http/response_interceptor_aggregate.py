@@ -6,8 +6,11 @@ from .response_interceptor import ResponseInterceptor
 
 
 class ResponseInterceptorAggregate:
-    def __init__(self):
-        self.interceptors: dict[Type[Response], ResponseInterceptor] = {}
+    def __init__(self) -> None:
+        self.interceptors: dict[
+            Type[Response],
+            ResponseInterceptor[Response],
+        ] = {}
 
     def can_intercept(self, response: Response) -> bool:
         return type(response) in self.interceptors

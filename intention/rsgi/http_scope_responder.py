@@ -1,4 +1,4 @@
-from granian.rsgi import HTTPProtocol, Scope
+from granian.rsgi import HTTPProtocol, Scope  # type: ignore
 
 from ..http.recursive_response_producer import RecursiveResponseProducer
 from ..httpfoundation import Request
@@ -17,7 +17,7 @@ class HTTPScopeResponder:
         self,
         scope: Scope,
         proto: HTTPProtocol,
-    ):
+    ) -> None:
         assert scope.proto == "http"
 
         request = Request(path=scope.path)

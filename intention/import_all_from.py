@@ -1,8 +1,12 @@
 import importlib
 import pkgutil
+from types import ModuleType
 
 
-def import_all_from(module, is_recursive=True):
+def import_all_from(
+    module: ModuleType,
+    is_recursive: bool = True,
+) -> None:
     for loader, name, is_pkg in pkgutil.walk_packages(module.__path__):
         full_name = module.__name__ + "." + name
 

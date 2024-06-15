@@ -22,5 +22,5 @@ class Router:
         self,
         pattern: str,
         responder: Responder,
-    ):
+    ) -> None:
         self.routes[pattern] = responder

@@ -1,21 +1,19 @@
-from http import HTTPMethod
-from typing import Any, Optional, Type
+from typing import Any, List, Optional, Type
 
+from ..cli.command_option import CommandOption
 from .service import service
 
 
-class responds_to_http_wrapped(service):
+class responds_to_cli_wrapped(service):
     def __init__(
         self,
         classname: Type[Any],
-        pattern: str,
-        method: HTTPMethod,
+        name: str,
         description: Optional[str],
-        name: Optional[str],
+        options: List[CommandOption[Any]],
     ) -> None:
         service.__init__(self, classname)
 
+        self.options = options
         self.description = description
-        self.method = method
         self.name = name
-        self.pattern = pattern

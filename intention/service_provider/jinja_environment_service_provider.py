@@ -1,4 +1,4 @@
-from ..application_module_provider import ApplicationModuleProvider
+from ..application_state import ApplicationState
 from ..role.service_provider import service_provider
 from .service_provider import ServiceProvider
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -8,16 +8,16 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 class JinjaEnvironmentServiceProvider(ServiceProvider[Environment]):
     def __init__(
         self,
-        application_module_provider: ApplicationModuleProvider,
+        application_state: ApplicationState,
     ):
-        self.application_module_provider = application_module_provider
+        self.application_state = application_state
 
     def provide(self) -> Environment:
         return Environment(
             auto_reload=False,
             enable_async=True,
             loader=PackageLoader(
-                self.application_module_provider.get_module().__name__,
+                self.application_state.root_module.__name__,
             ),
             autoescape=select_autoescape(),
         )

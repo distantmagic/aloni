@@ -16,7 +16,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         self,
         not_found_responder: NotFoundResponder,
         service_collection: Annotated[
-            ServiceColletion,
+            ServiceColletion[responds_to_http_wrapped],
             HasRole(responds_to_http_wrapped),
         ],
     ):
@@ -29,9 +29,6 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         )
 
         for role, responder in self.service_collection:
-            if not isinstance(role, responds_to_http_wrapped):
-                raise Exception(f"expected {responds_to_http_wrapped} got {role}")
-
             if not isinstance(responder, Responder):
                 raise Exception(f"expected {Responder} got {responder}")
 

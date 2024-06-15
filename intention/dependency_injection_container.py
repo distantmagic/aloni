@@ -1,10 +1,12 @@
 import inspect
 from typing import (
     Annotated,
+    Any,
     Generator,
     Sequence,
     Tuple,
     Type,
+    TypeVar,
     get_args,
     get_origin,
 )
@@ -19,7 +21,16 @@ from .service_collection_filter.service_collection_filter import ServiceCollecti
 from .service_provider.service_provider import ServiceProvider
 
 
-def get_custom_constructor_parameters(wrapped_class: Type):
+TClass = TypeVar("TClass", bound=object)
+
+
+def get_custom_constructor_parameters(
+    wrapped_class: Type[Any],
+) -> Generator[
+    Tuple[str, inspect.Parameter],
+    None,
+    None,
+]:
     constructor_parameters = inspect.signature(
         wrapped_class.__init__
     ).parameters.items()
@@ -37,9 +48,9 @@ def get_custom_constructor_parameters(wrapped_class: Type):
 
 
 def get_injectable_constructor_parameters(
-    wrapped_class: Type,
+    wrapped_class: Type[Any],
 ) -> Generator[
-    Tuple[str, Type, Sequence[ServiceCollectionFilter]],
+    Tuple[str, Type[Any], Sequence[ServiceCollectionFilter]],
     None,
     None,
 ]:
@@ -67,13 +78,21 @@ class DependencyInjectionContainer:
         self,
         role_registry: RoleRegistry,
     ):
-        self.instantiated_services: dict[Type, object] = {}
-        self.service_providers_roles: dict[Type, Tuple[Role, Type]] = {}
+        self.instantiated_services: dict[Type[Any], object] = {}
+        self.service_providers_roles: dict[
+            Type[Any],
+            Tuple[Role[Any], Type[Any]],
+        ] = {}
         self.role_registry = role_registry
 
-    def make(self, cls):
+    def make(self, cls: Type[TClass]) -> TClass:
         if cls in self.instantiated_services:
-            return self.instantiated_services[cls]
+            instance = self.instantiated_services[cls]
+
+            if not isinstance(instance, cls):
+                raise ValueError(f"not an instance of {cls} but of {type(instance)}")
+
+            return instance
 
         root_cls = get_root_class(cls)
 
@@ -101,6 +120,11 @@ class DependencyInjectionContainer:
 
         if isinstance(instantiated_provider, ServiceProvider):
             instantiated_service = instantiated_provider.provide()
+
+            if not isinstance(instantiated_service, cls):
+                raise ValueError(
+                    f"service provider {provider_cls} provided {type(instantiated_service)} instead of {cls}"
+                )
         else:
             instantiated_service = instantiated_provider
 
@@ -111,7 +135,7 @@ class DependencyInjectionContainer:
     def make_service_collection(
         self,
         service_collection_filters: Sequence[ServiceCollectionFilter],
-    ):
+    ) -> ServiceColletion[Role[Any]]:
         services = set()
 
         for service_collection_filter in service_collection_filters:
@@ -124,7 +148,7 @@ class DependencyInjectionContainer:
 
         return ServiceColletion(services)
 
-    def prepare(self):
+    def prepare(self) -> None:
         for role, wrapped_class in self.role_registry.filter_by_role_class(service):
             provided_class = None
 
@@ -140,5 +164,5 @@ class DependencyInjectionContainer:
 
             self.service_providers_roles[provided_class] = (role, wrapped_class)
 
-    def register_instance(self, cls, instance):
+    def register_instance(self, cls: Type[TClass], instance: TClass) -> None:
         self.instantiated_services[cls] = instance

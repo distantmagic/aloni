@@ -6,13 +6,9 @@ Whether you're building web applications or other async services, Intention stre
 
 ## Installation
 
-```
-pip install intention
-```
+Intention works best with [Poetry](https://python-poetry.org/):
 
-or
-
-```
+```py
 poetry add intention
 ```
 

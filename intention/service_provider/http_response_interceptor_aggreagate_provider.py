@@ -17,7 +17,7 @@ class HttpResponseInterceptorAggregateProvider(
     def __init__(
         self,
         service_collection: Annotated[
-            ServiceColletion,
+            ServiceColletion[intercepts_http_response_wrapped],
             HasRole(intercepts_http_response_wrapped),
         ],
     ):
@@ -27,11 +27,6 @@ class HttpResponseInterceptorAggregateProvider(
         response_interceptor_aggregate = ResponseInterceptorAggregate()
 
         for role, response_interceptor in self.service_collection:
-            if not isinstance(role, intercepts_http_response_wrapped):
-                raise Exception(
-                    f"expected {intercepts_http_response_wrapped} got {role}"
-                )
-
             if not isinstance(response_interceptor, ResponseInterceptor):
                 raise Exception(f"expected {Responder} got {response_interceptor}")
 

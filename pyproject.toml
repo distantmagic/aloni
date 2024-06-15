@@ -9,14 +9,14 @@ repository = "https://github.com/distantmagic/intention"
 name = "intention"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-asgiref = "^3.8.1"
-granian = "^1.4.1"
+granian = "^1.4.3"
 jinja2 = "^3.1.4"
+natsort = "^8.4.0"
 
 
 [tool.poetry.group.dev.dependencies]

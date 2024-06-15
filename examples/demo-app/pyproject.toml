@@ -16,6 +16,7 @@ granian = "^1.4.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.8"
+mypy = "^1.10.0"
 
 [build-system]
 requires = ["poetry-core"]

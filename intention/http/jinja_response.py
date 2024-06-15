@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Any
 from ..httpfoundation import Response
 
 
@@ -6,7 +7,7 @@ class JinjaResponse(Response):
     def __init__(
         self,
         template_filename: str,
-        data: dict = {},
+        data: dict[str, Any] = {},
         status: HTTPStatus = HTTPStatus.OK,
     ):
         Response.__init__(self)
