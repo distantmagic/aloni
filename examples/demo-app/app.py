@@ -1,4 +1,5 @@
 import demo_app
 import intention
+import sys
 
-intention.start(demo_app)
+sys.exit(intention.start(demo_app))

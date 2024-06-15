@@ -76,7 +76,7 @@ def get_injectable_constructor_parameters(
 class DependencyInjectionContainer:
     def __init__(
         self,
-        role_registry: RoleRegistry,
+        role_registry: RoleRegistry[Role[Any]],
     ):
         self.instantiated_services: dict[Type[Any], object] = {}
         self.service_providers_roles: dict[
@@ -135,7 +135,7 @@ class DependencyInjectionContainer:
     def make_service_collection(
         self,
         service_collection_filters: Sequence[ServiceCollectionFilter],
-    ) -> ServiceColletion[Role[Any]]:
+    ) -> ServiceColletion:
         services = set()
 
         for service_collection_filter in service_collection_filters:

@@ -10,6 +10,8 @@ class JinjaEnvironmentServiceProvider(ServiceProvider[Environment]):
         self,
         application_state: ApplicationState,
     ):
+        ServiceProvider.__init__(self)
+
         self.application_state = application_state
 
     def provide(self) -> Environment:

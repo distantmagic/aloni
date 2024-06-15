@@ -1,12 +1,10 @@
-from typing import Any, Generic, Iterator, Tuple, TypeVar
+from typing import Any, Iterator, Tuple
 from .role.role import Role
 
-TRole = TypeVar("TRole", bound=Role[Any])
 
-
-class ServiceColletion(Generic[TRole]):
-    def __init__(self, services: set[Tuple[TRole, object]]):
+class ServiceColletion:
+    def __init__(self, services: set[Tuple[Role[Any], object]]):
         self.services = services
 
-    def __iter__(self) -> Iterator[Tuple[TRole, object]]:
+    def __iter__(self) -> Iterator[Tuple[Role[Any], object]]:
         return iter(self.services)

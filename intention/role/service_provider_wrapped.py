@@ -6,8 +6,8 @@ TProvides = TypeVar("TProvides", bound=object)
 
 
 class service_provider_wrapped(
-    Generic[TProvides],
     service,
+    Generic[TProvides],
 ):
     def __init__(
         self,
