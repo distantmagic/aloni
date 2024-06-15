@@ -1,15 +1,15 @@
 import inspect
 from typing import Any, Type, TypeGuard, TypeVar
 
-from ..cli.command_protocol import CommandProtocol
+from .responder_protocol import ResponderProtocol
 
 TReturn = TypeVar("TReturn")
 
 
-def has_method(
-    cls: Any, name: str, return_type: Type[TReturn]
-) -> TypeGuard[CommandProtocol[TReturn]]:
-    method = getattr(cls, name, None)
+def is_responder(
+    cls: Any, return_type: Type[TReturn]
+) -> TypeGuard[ResponderProtocol[TReturn]]:
+    method = getattr(cls, "respond", None)
 
     if not method or not callable(method):
         return False

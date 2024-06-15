@@ -10,7 +10,7 @@ from .cli.command_option import CommandOption
 from .dependency_injection_container import DependencyInjectionContainer
 from .import_all_from import import_all_from
 from .meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
-from .meta.has_method import has_method
+from .meta.is_responder import is_responder
 from .role.responds_to_cli_wrapped import responds_to_cli_wrapped
 from .role.role import Role
 from .role.role_registry import RoleRegistry
@@ -76,7 +76,7 @@ def start(
 
     command = di.make(available_commands[args.command])
 
-    if not has_method(command, name="respond", return_type=int):
+    if not is_responder(command, return_type=int):
         raise NotImplementedError(
             "command must have a 'respond' method that returns an int"
         )
