@@ -7,7 +7,7 @@ repository = "https://github.com/distantmagic/intention"
 
 [tool.poetry]
 name = "intention"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>"]
 readme = "README.md"

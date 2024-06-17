@@ -2,7 +2,7 @@
 
 Intention is a Python framework designed to increase productivity when developing applications. Simplicity, productivity, and great developer experience are our primary goals.
 
-It is based on an innovative Role-Based Services approach. You can del (more info below).
+It is based on an innovative Role-Based Services approach. (more info below).
 
 It is async and thus performs well with IO-bound services (for example, anything that makes a lot of long-running HTTP calls to large language models or uses a lot of microservices and third-party services)—but not just those.
 
@@ -21,9 +21,9 @@ Intention will take only a few minutes to set up, and it might amaze you and cha
 
 ### Requirements
 
-Linux or MacOS (should work on all Unix systems). It currently doesn't work on Windows because it requires `fork` multiprocessing method (which Windows does not have).
+Linux or MacOS (should work on all Unix systems). It does not work on Windows because Intention requires the `fork` multiprocessing method (which Windows does not have).
 
-Windows support might be added in the future.
+That might change in the future (see also: https://github.com/emmett-framework/granian/issues/330).
 
 ### Steps
 

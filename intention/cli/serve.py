@@ -17,7 +17,7 @@ from ..rsgi.websocket_scope_responder import WebSocketScopeResponder
 
 @responds_to_cli(
     name="serve",
-    description="Start the app in HTTP server mode",
+    description="Start the app in HTTP server mode (uses RSGI and Granian; better performance)",
     options=[
         CommandOption(
             name="--blocking-threads",
