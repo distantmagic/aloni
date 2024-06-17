@@ -1,7 +1,7 @@
 import inspect
 from typing import Any
 
-from ..httpfoundation.request import Request
+from ..http_foundation.request import Request
 from ..meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
 from ..meta.async_responder_protocol import AsyncResponderProtocol
 from ..meta.function_parameter_store import FunctionParameterStore

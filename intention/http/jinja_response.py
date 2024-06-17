@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import Any
-from ..httpfoundation import Response
+from ..http_foundation import Response
 
 
 class JinjaResponse(Response):

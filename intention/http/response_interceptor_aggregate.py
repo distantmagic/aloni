@@ -1,6 +1,6 @@
 from typing import Type, Union
 
-from ..httpfoundation.response import Response
+from ..http_foundation.response import Response
 from .responder import Responder
 from .response_interceptor import ResponseInterceptor
 

@@ -6,6 +6,6 @@ from .role_registry import RoleRegistry
 if TYPE_CHECKING:
     from .role import Role
 
-    role_registry_global: RoleRegistry[Role[Any]] = RoleRegistry()
+    role_registry_global: RoleRegistry[Role] = RoleRegistry()
 else:
     role_registry_global: RoleRegistry[Any] = RoleRegistry()

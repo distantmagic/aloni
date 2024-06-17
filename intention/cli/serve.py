@@ -7,11 +7,11 @@ import sys
 
 from ..application_mode import ApplicationMode
 from ..application_state import ApplicationState
+from ..cli_foundation.command import Command
+from ..cli_foundation.command_option import CommandOption
 from ..role.responds_to_cli import responds_to_cli
 from ..rsgi.http_scope_responder import HTTPScopeResponder
 from ..rsgi.websocket_scope_responder import WebSocketScopeResponder
-from .command import Command
-from .command_option import CommandOption
 
 
 @responds_to_cli(

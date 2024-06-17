@@ -1,8 +1,20 @@
-# Intention (work in progress)
+# Intention
 
-Intention is a Python framework designed to simplify the development of IO-bound applications with an innovative Role-Based Services approach. 
+Intention is a Python framework designed to increase productivity when developing applications. Simplicity, productivity, and great developer experience are our primary goals.
 
-Whether you're building web applications or other async services, Intention streamlines your development process with ease.
+It is based on an innovative Role-Based Services approach. You can del (more info below).
+
+It is async and thus performs well with IO-bound services (for example, anything that makes a lot of long-running HTTP calls to large language models or uses a lot of microservices and third-party services)—but not just those.
+
+## Try it out
+
+Intention will take only a few minutes to set up, and it might amaze you and change how you develop apps. :)
+
+## Key Features
+
+- **Effortlessly split your project into multiple files**: Intention automatically combines your project files based on the roles you assign them, making it easy to manage large projects.
+- **Dependency Injection**: Manage your application's dependencies effortlessly with a container that holds one instance of each service, ensuring efficient resource management.
+- **Async-First**: Intention is optimized for asynchronous programming, making it perfect for IO-bound tasks.
 
 ## Installation
 
@@ -12,27 +24,65 @@ Intention works best with [Poetry](https://python-poetry.org/):
 poetry add intention
 ```
 
-## Key Features
+## Usage
 
-- **Role-Based Services**: Organize your services with unique roles using simple decorators like @responds_to_http. Each service in the dependency injection container plays a specific role, making your code more modular and maintainable.
-- **Dependency Injection**: Manage your application's dependencies effortlessly with a container that holds one instance of each service, ensuring efficient resource management.
-- **Async-First**: Built with ASGI and RSGI support, Intention is optimized for asynchronous programming, making it perfect for IO-bound tasks.
-- **Developer-Friendly**: Designed to be accessible for junior developers while providing powerful features for experienced programmers.
+Check the [demo project](/examples/demo-app) for basic usage.
+
+If you want to start something from scratch, install Intention and start with the following boilerplate code in your `app.py`:
+
+```py
+import my_app
+import intention
+
+intention.start(my_app).exit_after_finishing()
+```
+
+Intention will scan your module (in this case, `my_app`) for services with a role decorator and start your CLI application. That's it!
+
+If you want to start developing something new, add a new CLI command. Use `responds_to_cli` role. Add a new file in `my_app/hello_command.py` (file name can be anything; it's just an example - file names and directory structure do not matter for Intention):
+
+```py
+from intention.cli_foundation import Command
+from intention.role import responds_to_cli
+
+
+@responds_to_cli(
+    name="hello",
+    description="Say hello!",
+)
+class Hello(Command):
+    def respond(self) -> int:
+        print("Hello, World!")
+
+        return 0
+```
+
+You can then run it with:
+
+```shell
+python ./app.py hello
+```
+
+You should see:
+
+```
+Hello, World!
+```
 
 ## Why Intention?
 
-Intention's unique Role-Based Services approach allows for clear and organized code, facilitating collaboration and maintenance. Its async-first design ensures your applications are performant and scalable, catering to a wide range of applications beyond just web development.
+Intention's unique Role-Based Services approach allows for clear and organized code. It scans your project for services decorated as `roles` and automatically combines them. It takes care of all the tedious work and allows you to focus on the application architecture.
 
 ### Suitable for Bigger Projects
 
-Intention allows you to split your HTTP responders and other modules among multiple files, facilitating easy maintenance and scalability.
+Intention allows you to split your HTTP responders and other modules among multiple files.
 
 You do not have to manually combine the project files. Intention treats `role.*` decorators as metadata and puts them together for you.
 
 ```py
 from intention.role import responds_to_http
 from intention.http import Responder, JinjaResponse
-from intention.httpfoundation import Request
+from intention.http_foundation import Request
 
 
 @responds_to_http(pattern="/")
@@ -81,6 +131,28 @@ class MyService:
     async def render_something(self):
         return self.env.get_template('foo.j2').render()
 ```
+
+## Available Roles
+
+All the available roles are accessible from `intention.role` module. 
+
+For example:
+
+```py
+from intention.role import responds_to_http
+```
+
+| Role | Description |
+| ------------- | ------------- |
+| [intercepts_http_response](intention/role/intercepts_http_response.py) | Allows to intercept any response returned by your http responder and convert it into a renderable response. It acts kind of like inversed middleware - instead of intercepting a request, it intercepts and modifies a response. |
+| [responds_to_cli](intention/role/responds_to_cli.py) | Responds to CLI command |
+| [responds_to_http](intention/role/responds_to_http.py) | Responds to HTTP request |
+| [service](intention/role/service.py) | Marks the current class as a service. Its constructor arguments will be injected from the dependency injection container |
+| [service_provider](intention/role/service_provider.py) | Registers a service provider for dependency injection. Use it if you want to create a class that provides an instance of a different class to the dependency injection container. |
+
+## Special Thanks
+
+- [Granian](https://github.com/emmett-framework/granian) for creating an awesome HTTP Python runner with excellent performance
 
 ## License
 

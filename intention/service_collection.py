@@ -1,10 +1,10 @@
-from typing import Any, Iterator, Tuple
+from typing import Iterator, Tuple
 from .role.role import Role
 
 
 class ServiceColletion:
-    def __init__(self, services: set[Tuple[Role[Any], object]]):
+    def __init__(self, services: set[Tuple[Role, object]]):
         self.services = services
 
-    def __iter__(self) -> Iterator[Tuple[Role[Any], object]]:
+    def __iter__(self) -> Iterator[Tuple[Role, object]]:
         return iter(self.services)

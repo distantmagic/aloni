@@ -5,7 +5,7 @@ from .text_response import TextResponse
 from jinja2 import Environment
 
 
-@intercepts_http_response(JinjaResponse)
+@intercepts_http_response(response_class=JinjaResponse)
 class ResponseInterceptorJinja(ResponseInterceptor[JinjaResponse]):
     def __init__(
         self,

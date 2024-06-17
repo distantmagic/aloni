@@ -3,8 +3,9 @@ from typing import Annotated
 from ..http.not_found_responder import NotFoundResponder
 from ..http.responder import Responder
 from ..http.responder_caller import ResponderCaller
+from ..http.route import Route
 from ..http.router import Router
-from ..role.responds_to_http_wrapped import responds_to_http_wrapped
+from ..role.responds_to_http import responds_to_http
 from ..role.service_provider import service_provider
 from ..service_collection import ServiceColletion
 from ..service_collection_filter.has_role import HasRole
@@ -19,7 +20,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         responder_caller: ResponderCaller,
         service_collection: Annotated[
             ServiceColletion,
-            HasRole(responds_to_http_wrapped),
+            HasRole(responds_to_http),
         ],
     ):
         ServiceProvider.__init__(self)
@@ -34,8 +35,8 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         )
 
         for role, responder in self.service_collection:
-            if not isinstance(role, responds_to_http_wrapped):
-                raise Exception(f"expected {responds_to_http_wrapped} got {role}")
+            if not isinstance(role, responds_to_http):
+                raise Exception(f"expected {responds_to_http} got {role}")
 
             if not isinstance(responder, Responder):
                 raise Exception(f"expected {Responder} got {responder}")
@@ -43,8 +44,11 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
             self.responder_caller.prepare_for(responder)
 
             router.register_route(
-                pattern=role.pattern,
-                responder=responder,
+                Route(
+                    name=role.name,
+                    pattern=role.pattern,
+                    responder=responder,
+                )
             )
 
         return router

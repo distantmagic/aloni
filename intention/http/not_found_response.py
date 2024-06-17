@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from ..httpfoundation import Response
+from ..http_foundation import Response
 
 
 class NotFoundResponse(Response):

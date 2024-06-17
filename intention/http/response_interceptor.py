@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Union
 
-from ..httpfoundation.response import Response
+from ..http_foundation.response import Response
 from .responder import Responder
 
 TResponse = TypeVar("TResponse", bound=Response)

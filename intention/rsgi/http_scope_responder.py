@@ -2,7 +2,7 @@ from granian.rsgi import HTTPProtocol, Scope  # type: ignore
 
 from ..http.recursive_responder_aggregate import RecursiveResponderAggregate
 from ..http.responder_caller import ResponderCaller
-from ..httpfoundation import Request
+from ..http_foundation import Request
 from ..role.service import service
 
 

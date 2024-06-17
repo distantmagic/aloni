@@ -11,10 +11,10 @@ from typing import (
     get_origin,
 )
 
-from .role.get_root_class import get_root_class
+from .meta.get_root_class import get_root_class
 from .role.role import Role
 from .role.service import service
-from .role.service_provider_wrapped import service_provider_wrapped
+from .role.service_provider import service_provider
 from .role.role_registry import RoleRegistry
 from .service_collection import ServiceColletion
 from .service_collection_filter.service_collection_filter import ServiceCollectionFilter
@@ -76,12 +76,12 @@ def get_injectable_constructor_parameters(
 class DependencyInjectionContainer:
     def __init__(
         self,
-        role_registry: RoleRegistry[Role[Any]],
+        role_registry: RoleRegistry[Role],
     ):
         self.instantiated_services: dict[Type[Any], object] = {}
         self.service_providers_roles: dict[
             Type[Any],
-            Tuple[Role[Any], Type[Any]],
+            Tuple[Role, Type[Any]],
         ] = {}
         self.role_registry = role_registry
 
@@ -152,7 +152,7 @@ class DependencyInjectionContainer:
         for role, wrapped_class in self.role_registry.filter_by_role_class(service):
             provided_class = None
 
-            if isinstance(role, service_provider_wrapped):
+            if isinstance(role, service_provider):
                 provided_class = role.provides
             else:
                 provided_class = wrapped_class

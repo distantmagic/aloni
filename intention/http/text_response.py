@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from ..httpfoundation.renderable_response import RenderableResponse
+from ..http_foundation.renderable_response import RenderableResponse
 
 
 class TextResponse(RenderableResponse):

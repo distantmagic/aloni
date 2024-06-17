@@ -6,5 +6,5 @@ from ..role.role import Role
 
 class ServiceCollectionFilter(ABC):
     @abstractmethod
-    def should_include(self, role: Role[Any], provided_class: Type[Any]) -> bool:
+    def should_include(self, role: Role, provided_class: Type[Any]) -> bool:
         pass

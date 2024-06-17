@@ -1,6 +1,15 @@
-from dataclasses import dataclass
+from typing import Optional
+
+from .responder import Responder
 
 
-@dataclass
 class Route:
-    pattern: str
+    def __init__(
+        self,
+        name: Optional[str],
+        pattern: str,
+        responder: Responder,
+    ) -> None:
+        self.name = name
+        self.pattern = pattern
+        self.responder = responder

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ApplicationMode(Enum):
+class ApplicationMode(StrEnum):
     CLI = "cli"
     HTTP_SERVER = "http_server"
     # BACKGROUND_TASK = "background_task"

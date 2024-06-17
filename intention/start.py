@@ -1,18 +1,20 @@
 import argparse
 from types import ModuleType
-from typing import Any, Iterable, Tuple, Type
+from typing import Iterable, Tuple, Type
 from natsort import natsorted
 
 from .application_mode import ApplicationMode
+from .application_run_result import ApplicationRunResult
 from .application_state import ApplicationState
-from .cli.command import Command
-from .cli.command_option import CommandOption
+from .cli import *  # noqa: F403
+from .cli_foundation.command import Command
+from .cli_foundation.command_option import CommandOption
 from .dependency_injection_container import DependencyInjectionContainer
 from .import_all_from import import_all_from
 from .meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
 from .meta.function_parameter_store import FunctionParameterStore
 from .meta.is_responder import is_responder
-from .role.responds_to_cli_wrapped import responds_to_cli_wrapped
+from .role.responds_to_cli import responds_to_cli
 from .role.role import Role
 from .role.role_registry import RoleRegistry
 from .role.role_regsitry_global import role_registry_global
@@ -20,18 +22,18 @@ from .service_provider import *  # noqa: F403
 
 
 def get_sorted_roles(
-    role_registry: RoleRegistry[Role[Any]],
-) -> Iterable[Tuple[responds_to_cli_wrapped, Type[Command]]]:
+    role_registry: RoleRegistry[Role],
+) -> Iterable[Tuple[responds_to_cli, Type[Command]]]:
     return natsorted(
-        role_registry_global.filter_by_role_class(responds_to_cli_wrapped),
+        role_registry_global.filter_by_role_class(responds_to_cli),
         key=lambda x: x[0].name,
     )
 
 
 def start(
     module: ModuleType,
-    role_registry: RoleRegistry[Role[Any]] = role_registry_global,
-) -> int:
+    role_registry: RoleRegistry[Role] = role_registry_global,
+) -> ApplicationRunResult:
     import_all_from(module)
 
     di = DependencyInjectionContainer(role_registry=role_registry)
@@ -70,7 +72,7 @@ def start(
     if args.command is None:
         parser.print_help()
 
-        return 0
+        return ApplicationRunResult(exit_code=0)
 
     if args.command not in available_commands:
         raise ValueError(f"Command {args.command} not found")
@@ -91,4 +93,4 @@ def start(
     if not isinstance(exit_code, int):
         raise ValueError(f"expected int as exit code, got {type(exit_code)}")
 
-    return exit_code
+    return ApplicationRunResult(exit_code=exit_code)

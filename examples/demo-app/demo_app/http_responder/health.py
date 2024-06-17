@@ -11,4 +11,4 @@ from intention.http import Responder, TextResponse
 )
 class Health(Responder):
     async def respond(self) -> TextResponse:
-        return TextResponse("HEALTH OK!")
+        return TextResponse("OK")
