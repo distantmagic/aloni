@@ -15,27 +15,67 @@ Intention will take only a few minutes to set up, and it might amaze you and cha
 - **Effortlessly split your project into multiple files**: Intention automatically combines your project files based on the roles you assign them, making it easy to manage large projects.
 - **Dependency Injection**: Manage your application's dependencies effortlessly with a container that holds one instance of each service, ensuring efficient resource management.
 - **Async-First**: Intention is optimized for asynchronous programming, making it perfect for IO-bound tasks.
+- **Minial boilerplate**: Intention adds no redundant boilerplate code. Keep your project as simple as possible.
 
 ## Installation
 
-Intention works best with [Poetry](https://python-poetry.org/):
+### Requirements
 
-```py
-poetry add intention
+Linux or MacOS (should work on all Unix systems). It currently doesn't work on Windows because it requires `fork` multiprocessing method (which Windows does not have).
+
+Windows support might be added in the future.
+
+### Steps
+
+Intention works best with [Poetry](https://python-poetry.org/). Install [Poetry](https://python-poetry.org/) first and follow the steps:
+
+1. Create a new project. Invoke the command and fill in the project creation form:  
+    ```shell
+    poetry init my_app
+    ```
+2. In the project's directory (the one with the newly created `pyproject.toml`) open:  
+    ```shell
+    poetry shell
+    ```
+3. Install Intention locally in the project:  
+    ```shell
+    poetry add intention
+    ```
+4. Create your application's module:  
+    ```shell
+    mkdir my_app
+    ```
+    ```shell
+    touch my_app/__init__.py
+    ```
+5. Create the `app.py` (primary application file). That is the entire boilerplate code that Intention needs to work:  
+    ```py
+    import my_app
+    import intention
+
+    intention.start(my_app).exit_after_finishing()
+    ```
+
+Invoking `python ./app.py` should display something like:
+
+```shell
+usage: app.py [-h] {hello,serve} ...
+
+Intention CLI
+
+positional arguments:
+  {serve}
+    serve        Start the app in HTTP server mode
+
+options:
+  -h, --help     show this help message and exit
 ```
+
+Congratulations! You have installed the Intention project. You can continue with the next steps.
 
 ## Usage
 
 Check the [demo project](/examples/demo-app) for basic usage.
-
-If you want to start something from scratch, install Intention and start with the following boilerplate code in your `app.py`:
-
-```py
-import my_app
-import intention
-
-intention.start(my_app).exit_after_finishing()
-```
 
 Intention will scan your module (in this case, `my_app`) for services with a role decorator and start your CLI application. That's it!
 

@@ -3,6 +3,7 @@ from typing import Awaitable, Callable, Optional, Union
 from granian.constants import Interfaces
 from granian.rsgi import HTTPProtocol, Scope, WebsocketProtocol  # type: ignore
 from granian.server import Granian
+import multiprocessing
 import sys
 
 from ..application_mode import ApplicationMode
@@ -99,6 +100,8 @@ class Serve(Command):
         url_path_prefix: str,
         workers: int,
     ) -> int:
+        multiprocessing.set_start_method("fork", force=True)
+
         server = Granian(
             self.application_state.root_module.__name__,
             blocking_threads=blocking_threads,

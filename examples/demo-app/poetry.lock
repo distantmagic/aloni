@@ -26,6 +26,21 @@ files = [
 ]
 
 [[package]]
+name = "dill"
+version = "0.3.8"
+description = "serialize all of Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "dill-0.3.8-py3-none-any.whl", hash = "sha256:c36ca9ffb54365bdd2f8eb3eff7d2a21237f8452b57ace88b1ac615b7e815bd7"},
+    {file = "dill-0.3.8.tar.gz", hash = "sha256:3ebe3c479ad625c4553aca177444d89b486b1d84982eeacded644afc0cf797ca"},
+]
+
+[package.extras]
+graph = ["objgraph (>=1.7.2)"]
+profile = ["gprof2dot (>=2022.7.29)"]
+
+[[package]]
 name = "granian"
 version = "1.4.3"
 description = "A Rust HTTP server for Python applications"
@@ -105,7 +120,7 @@ test = ["httpx (>=0.25.0,<0.26.0)", "pytest (>=7.4.2,<7.5.0)", "pytest-asyncio (
 
 [[package]]
 name = "intention"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 optional = false
 python-versions = "^3.11"
@@ -113,6 +128,7 @@ files = []
 develop = true
 
 [package.dependencies]
+dill = "^0.3.8"
 granian = "^1.4.3"
 jinja2 = "^3.1.4"
 natsort = "^8.4.0"
