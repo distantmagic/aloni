@@ -1,6 +1,6 @@
+from aloni.role import responds_to_http
+from aloni.http import Responder, TextResponse
 from http import HTTPMethod
-from intention.role import responds_to_http
-from intention.http import Responder, TextResponse
 
 
 @responds_to_http(

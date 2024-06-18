@@ -502,4 +502,4 @@ test = ["Cython (>=0.29.36,<0.30.0)", "aiohttp (==3.9.0b0)", "aiohttp (>=3.8.1)"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "4f0f7bc930f6e3e5569edcb2eb27548b28bd8903237b5a8c270997139b21131a"
+content-hash = "fd3ef0e1fbf7f912b2683b2b742d02e057e47fad4662e28335e46852f8033d86"

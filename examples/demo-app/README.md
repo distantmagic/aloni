@@ -1,6 +1,6 @@
 # demo app
 
-This is a demo app that showcases the use of the intention library.
+This is a demo app that showcases the use of the Aloni library.
 
 ## Usage
 

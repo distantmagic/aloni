@@ -5,12 +5,12 @@ description = ""
 authors = ["Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>"]
 readme = "README.md"
 packages = [
-    { include = "intention", from = "../../../intention" },
+    { include = "aloni", from = "../../../aloni" },
 ]
 
 [tool.poetry.dependencies]
+aloni = {path = "../../../aloni", develop=true}
 python = "^3.11"
-intention = {path = "../../../intention", develop=true}
 granian = "^1.4.2"
 
 

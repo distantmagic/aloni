@@ -1,4 +1,4 @@
 import demo_app
-import intention
+import aloni
 
-intention.start(demo_app).exit_after_finishing()
+aloni.start(demo_app).exit_after_finishing()

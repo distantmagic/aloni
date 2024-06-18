@@ -3,10 +3,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [project.urls]
-repository = "https://github.com/distantmagic/intention"
+repository = "https://github.com/distantmagic/aloni"
 
 [tool.poetry]
-name = "intention"
+name = "aloni"
 version = "0.2.1"
 description = ""
 authors = ["Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>"]
@@ -16,14 +16,14 @@ readme = "README.md"
 python = "^3.11"
 granian = "^1.4.3"
 jinja2 = "^3.1.4"
+mypy = "^1.10.0"
 natsort = "^8.4.0"
 typeguard = "^4.3.0"
 dill = "^0.3.8"
+ruff = "^0.4.9"
 
 
 [tool.poetry.group.dev.dependencies]
 pipdeptree = "^2.22.0"
 pydeps = "^1.12.20"
 pytest = "^8.2.2"
-ruff = "^0.4.8"
-mypy = "^1.10.0"

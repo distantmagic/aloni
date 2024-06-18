@@ -1,5 +1,5 @@
-from intention.role import responds_to_http
-from intention.http import Responder, JinjaResponse
+from aloni.role import responds_to_http
+from aloni.http import Responder, JinjaResponse
 
 
 @responds_to_http(pattern="/")
