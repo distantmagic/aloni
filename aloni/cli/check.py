@@ -1,7 +1,8 @@
 import os
 import subprocess
+import sys
 from mypy import api
-from ruff.__main__ import find_ruff_bin
+from ruff.__main__ import find_ruff_bin  # type: ignore
 
 from ..application_state import ApplicationState
 from ..cli_foundation.command import Command
@@ -52,6 +53,9 @@ class Check(Command):
         )
 
         stdout, stderr, returncode = result
+
+        sys.stdout.write(stdout)
+        sys.stderr.write(stderr)
 
         return returncode
 
