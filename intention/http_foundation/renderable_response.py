@@ -1,11 +1,8 @@
 from abc import abstractmethod
-from .response import Response
+from .final_response import FinalResponse
 
 
-class RenderableResponse(Response):
+class RenderableResponse(FinalResponse):
     @abstractmethod
     def get_content(self) -> str:
         pass
-
-    def get_content_type(self) -> str:
-        return "text/plain"

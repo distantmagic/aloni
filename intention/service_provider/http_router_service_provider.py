@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from ..http.exception_responder import ExceptionResponder
 from ..http.not_found_responder import NotFoundResponder
 from ..http.responder import Responder
 from ..http.responder_caller import ResponderCaller
@@ -16,6 +17,7 @@ from .service_provider import ServiceProvider
 class HttpRouterServiceProvider(ServiceProvider[Router]):
     def __init__(
         self,
+        exception_responder: ExceptionResponder,
         not_found_responder: NotFoundResponder,
         responder_caller: ResponderCaller,
         service_collection: Annotated[
@@ -25,6 +27,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
     ):
         ServiceProvider.__init__(self)
 
+        self.exception_responder = exception_responder
         self.not_found_responder = not_found_responder
         self.responder_caller = responder_caller
         self.service_collection = service_collection
@@ -50,5 +53,9 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
                     responder=responder,
                 )
             )
+
+        # manually add responders registered as global services
+        self.responder_caller.prepare_for(self.exception_responder)
+        self.responder_caller.prepare_for(self.not_found_responder)
 
         return router

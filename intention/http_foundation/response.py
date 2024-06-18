@@ -1,8 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from http import HTTPStatus
 
 
 class Response(ABC):
-    @abstractmethod
+    def get_content_type(self) -> str:
+        return "text/plain"
+
     def get_status(self) -> HTTPStatus:
-        pass
+        return HTTPStatus.OK

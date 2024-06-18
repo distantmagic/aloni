@@ -1,6 +1,6 @@
 from typing import Any
 
-from ..http_foundation.renderable_response import RenderableResponse
+from ..http_foundation.final_response import FinalResponse
 from ..http_foundation.request import Request
 from ..http_foundation.response import Response
 from ..role.service import service
@@ -23,7 +23,7 @@ class RecursiveResponderAggregate:
         self.response_interceptor_aggregate = response_interceptor_aggregate
         self.router = router
 
-    async def produce_response(self, request: Request) -> RenderableResponse:
+    async def produce_response(self, request: Request) -> FinalResponse:
         try:
             responder = self.router.match(request).route.responder
             response = await self.responder_caller.call_responder(request, responder)
@@ -36,9 +36,9 @@ class RecursiveResponderAggregate:
         self,
         request: Request,
         response: Response,
-    ) -> RenderableResponse:
+    ) -> FinalResponse:
         if not self.response_interceptor_aggregate.can_intercept(response):
-            if isinstance(response, RenderableResponse):
+            if isinstance(response, FinalResponse):
                 return response
 
             raise ValueError(f"unable to produce a renderable response from {response}")
@@ -52,8 +52,8 @@ class RecursiveResponderAggregate:
         self,
         request: Request,
         response: Any,
-    ) -> RenderableResponse:
-        if isinstance(response, RenderableResponse):
+    ) -> FinalResponse:
+        if isinstance(response, FinalResponse):
             return await self.process_interceptors(request, response)
         elif isinstance(response, Responder):
             return await self.process_response(
