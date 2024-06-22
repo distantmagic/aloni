@@ -27,24 +27,19 @@ class HTTPScopeResponder:
 
         request = Request(path=scope.path)
 
-        try:
-            response = await self.recursive_responder_aggregate.produce_response(
-                request,
-            )
+        response = await self.recursive_responder_aggregate.produce_response(request)
 
-            if isinstance(response, FileResponse):
-                proto.response_file(
-                    status=response.get_status(),
-                    headers=[("content-type", response.get_content_type())],
-                    file=str(response.get_absolute_file_path()),
-                )
-            elif isinstance(response, RenderableResponse):
-                proto.response_str(
-                    status=response.get_status(),
-                    headers=[("content-type", response.get_content_type())],
-                    body=response.get_content(),
-                )
-            else:
-                raise ValueError(f"unknown response type: {response}")
-        finally:
-            self.responder_caller.request_done(request)
+        if isinstance(response, FileResponse):
+            proto.response_file(
+                status=response.get_status(),
+                headers=[("content-type", response.get_content_type())],
+                file=str(response.get_absolute_file_path()),
+            )
+        elif isinstance(response, RenderableResponse):
+            proto.response_str(
+                status=response.get_status(),
+                headers=[("content-type", response.get_content_type())],
+                body=response.get_content(),
+            )
+        else:
+            raise ValueError(f"unknown response type: {response}")

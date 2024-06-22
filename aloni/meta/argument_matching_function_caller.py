@@ -27,15 +27,16 @@ class ArgumentMatchingFunctionCaller:
         return func(**self.prepare_arguments(func))
 
     def prepare_arguments(self, func: Callable[..., Any]) -> dict[str, Any]:
-        params = self.function_parameter_store.cached_get_param_names(func)
+        func_args: dict[str, Any] = {}
+        params = self.function_parameter_store.cached_get_params(func)
 
         if isinstance(self.args, dict):
-            func_args = {name: self.args[name] for name in params if name in self.args}
+            for param in params:
+                if param.name in self.args:
+                    func_args[param.name] = self.args[param.name]
         else:
-            func_args = {
-                name: getattr(self.args, name)
-                for name in params
-                if hasattr(self.args, name)
-            }
+            for param in params:
+                if hasattr(self.args, param.name):
+                    func_args[param.name] = getattr(self.args, param.name)
 
         return func_args

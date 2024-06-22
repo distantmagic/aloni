@@ -49,7 +49,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
             if not isinstance(responder, Responder):
                 raise Exception(f"expected {Responder} got {responder}")
 
-            self.responder_caller.prepare_for(responder)
+            self.responder_caller.prepare_for_responder(responder)
 
             router.register_route(
                 Route(
@@ -60,7 +60,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
             )
 
         # manually add responders registered as global services
-        self.responder_caller.prepare_for(self.exception_responder)
-        self.responder_caller.prepare_for(self.not_found_responder)
+        self.responder_caller.prepare_for_responder(self.exception_responder)
+        self.responder_caller.prepare_for_responder(self.not_found_responder)
 
         return router

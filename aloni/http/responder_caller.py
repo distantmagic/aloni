@@ -29,25 +29,28 @@ class ResponderCaller:
         self,
         request: Request,
         responder: Responder,
-        args: Mapping[str, Any],
     ) -> Any:
         if responder not in self.prepared_responders:
             raise Exception(f"not prepared to handle {responder}")
-
-        if request not in self.responder_callers:
-            self.responder_callers[request] = ArgumentMatchingFunctionCaller(
-                function_parameter_store=self.function_parameter_store,
-                args=args,
-            )
 
         return await self.responder_callers[request].call_async_function(
             self.prepared_responders[responder].respond
         )
 
+    async def prepare_for_request(
+        self,
+        request: Request,
+        responder_args: Mapping[str, Any],
+    ) -> None:
+        self.responder_callers[request] = ArgumentMatchingFunctionCaller(
+            function_parameter_store=self.function_parameter_store,
+            args=responder_args,
+        )
+
     # this method is called by the HttpRouterServiceProvider
     # it gives the opportunity for ResponderCaller to precache responder
     # parameters and to make the response times consistent later
-    def prepare_for(self, responder: Responder) -> None:
+    def prepare_for_responder(self, responder: Responder) -> None:
         orig_responder = responder
 
         if not is_responder(responder):
@@ -56,8 +59,8 @@ class ResponderCaller:
             )
 
         self.prepared_responders[orig_responder] = responder
-        self.function_parameter_store.cached_get_param_names(responder.respond)
+        self.function_parameter_store.cached_get_params(responder.respond)
 
-    def request_done(self, request: Request) -> None:
+    async def request_done(self, request: Request) -> None:
         if request in self.responder_callers:
             del self.responder_callers[request]

@@ -1,5 +1,7 @@
 import inspect
 from typing import Any, Callable, List
+
+from .function_parameter import FunctionParameter
 from ..role.service import service
 
 
@@ -12,29 +14,34 @@ class FunctionParameterStore:
     def __init__(
         self,
     ) -> None:
-        self.cached_param_names: dict[
+        self.cached_params: dict[
             Callable[..., Any],
-            List[str],
+            List[FunctionParameter],
         ] = {}
 
-    def cached_get_param_names(
+    def cached_get_params(
         self,
         func: Callable[..., Any],
-    ) -> List[str]:
-        if func in self.cached_param_names:
-            return self.cached_param_names[func]
+    ) -> List[FunctionParameter]:
+        if func in self.cached_params:
+            return self.cached_params[func]
 
         sig = inspect.signature(func)
 
         params = sig.parameters
-        param_names = []
+        param_names: list[FunctionParameter] = []
 
         for param in params.values():
             if param.name == "self":
                 continue
 
-            param_names.append(param.name)
+            param_names.append(
+                FunctionParameter(
+                    annotation=param.annotation,
+                    name=param.name,
+                )
+            )
 
-        self.cached_param_names[func] = param_names
+        self.cached_params[func] = param_names
 
         return param_names
