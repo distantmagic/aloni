@@ -9,7 +9,7 @@ from ..role.responds_to_cli import responds_to_cli
 
 @responds_to_cli(
     name="format",
-    description="Formats the code",
+    description="Formats the application code accodring to PEP-8",
 )
 class Format(Command):
     def __init__(

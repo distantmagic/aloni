@@ -1,0 +1,2 @@
+class InternalLinKBuilder:
+    pass

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping
 
 from ..http_foundation.request import Request
 from ..meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
@@ -29,6 +29,7 @@ class ResponderCaller:
         self,
         request: Request,
         responder: Responder,
+        args: Mapping[str, Any],
     ) -> Any:
         if responder not in self.prepared_responders:
             raise Exception(f"not prepared to handle {responder}")
@@ -36,9 +37,7 @@ class ResponderCaller:
         if request not in self.responder_callers:
             self.responder_callers[request] = ArgumentMatchingFunctionCaller(
                 function_parameter_store=self.function_parameter_store,
-                args={
-                    "request": request,
-                },
+                args=args,
             )
 
         return await self.responder_callers[request].call_async_function(

@@ -1,5 +1,5 @@
 from abc import ABC
 
 
-class Command(ABC):
+class JinjaFunction(ABC):
     pass

@@ -12,6 +12,7 @@ from .cli_foundation.command import Command
 from .cli_foundation.command_option import CommandOption
 from .dependency_injection_container import DependencyInjectionContainer
 from .import_all_from import import_all_from
+from .jinja_function import *  # noqa: F403
 from .meta.argument_matching_function_caller import ArgumentMatchingFunctionCaller
 from .meta.function_parameter_store import FunctionParameterStore
 from .meta.is_responder import is_responder

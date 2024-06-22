@@ -11,7 +11,7 @@ from ..role.responds_to_cli import responds_to_cli
 
 @responds_to_cli(
     name="check",
-    description="Checks the code for potential errors",
+    description="Check the project for type errors and linting issues (runs preconfigured ruff and mypy)",
 )
 class Check(Command):
     def __init__(

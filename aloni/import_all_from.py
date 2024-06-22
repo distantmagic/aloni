@@ -8,6 +8,9 @@ def import_all_from(
     is_recursive: bool = True,
 ) -> None:
     for loader, name, is_pkg in pkgutil.walk_packages(module.__path__):
+        if name.startswith("test_"):
+            continue
+
         full_name = module.__name__ + "." + name
 
         try:

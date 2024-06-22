@@ -33,9 +33,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         self.service_collection = service_collection
 
     async def provide(self) -> Router:
-        router = Router(
-            not_found_responder=self.not_found_responder,
-        )
+        router = Router(not_found_responder=self.not_found_responder)
 
         for role, responder in self.service_collection:
             if not isinstance(role, responds_to_http):

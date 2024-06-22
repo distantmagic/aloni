@@ -206,6 +206,29 @@ class OtherService:
         self.my_service = my_service
 ```
 
+### Registering Jinja Functions
+
+Custom Jinja functions have their constructor (`__init__`) arguments injected by the dependency injection container.
+
+Arguments passed to the `__call__` method are passed from a template.
+
+```py
+from aloni.jinja_function import JinjaFunction
+from aloni.role.jinja_function import jinja_function
+
+
+@jinja_function(name="say_hello")
+class UrlFor(JinjaFunction):
+    def __call__(self) -> str:
+        return "Hello, world!"
+```
+
+Then use it in a template:
+
+```j2
+{{ say_hello() }}
+```
+
 ## API Reference
 
 ### HTTP Responses

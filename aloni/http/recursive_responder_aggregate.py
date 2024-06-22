@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping
 
 from ..http_foundation.final_response import FinalResponse
 from ..http_foundation.request import Request
@@ -25,10 +25,17 @@ class RecursiveResponderAggregate:
 
     async def produce_response(self, request: Request) -> FinalResponse:
         try:
-            responder = self.router.match(request).route.responder
-            response = await self.responder_caller.call_responder(request, responder)
+            router_match = self.router.match(request)
+            responder_args = router_match.path_variables | {
+                "request": request,
+            }
 
-            return await self.process_response(request, response)
+            responder = router_match.route.responder
+            response = await self.responder_caller.call_responder(
+                request, responder, responder_args
+            )
+
+            return await self.process_response(request, response, responder_args)
         except Exception as err:
             return ExceptionResponse(err)
 
@@ -36,6 +43,7 @@ class RecursiveResponderAggregate:
         self,
         request: Request,
         response: Response,
+        responder_args: Mapping[str, Any] = {},
     ) -> FinalResponse:
         if not self.response_interceptor_aggregate.can_intercept(response):
             if isinstance(response, FinalResponse):
@@ -46,19 +54,23 @@ class RecursiveResponderAggregate:
         return await self.process_response(
             request=request,
             response=await self.response_interceptor_aggregate.intercept(response),
+            responder_args=responder_args,
         )
 
     async def process_response(
         self,
         request: Request,
         response: Any,
+        responder_args: Mapping[str, Any] = {},
     ) -> FinalResponse:
         if isinstance(response, FinalResponse):
             return await self.process_interceptors(request, response)
         elif isinstance(response, Responder):
             return await self.process_response(
                 request=request,
-                response=await self.responder_caller.call_responder(request, response),
+                response=await self.responder_caller.call_responder(
+                    request, response, responder_args
+                ),
             )
         elif isinstance(response, Response):
             return await self.process_interceptors(request, response)
