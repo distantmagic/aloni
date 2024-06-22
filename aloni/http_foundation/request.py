@@ -3,4 +3,4 @@ class Request:
         self,
         path: str,
     ):
-        self.path = path
+        self.path = path.strip("/")

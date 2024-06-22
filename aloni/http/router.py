@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Generator, Optional
 from ..http_foundation import Request
 from .not_found_responder import NotFoundResponder
 from .route import Route
 from .route_node_match import RouteNodeMatch
 from .route_match import RouteMatch
 from .route_node import RouteNode
+from .route_pattern import RoutePattern
 
 
 class Router:
@@ -14,38 +15,72 @@ class Router:
     ):
         self.not_found_responder = not_found_responder
         self.root_node = RouteNode(wildcard=True)
+        self.static_routes: dict[str, Route] = {}
+
+    def find_potential_matches(
+        self,
+        current_depth: int,
+        parent_match: Optional[RouteNodeMatch],
+        parts: list[str],
+        route_node: RouteNode,
+    ) -> Generator[RouteNodeMatch, None, None]:
+        if not parts:
+            return
+
+        part = parts[0]
+
+        for child_node in route_node.child_nodes:
+            if child_node.is_part_matching(part):
+                route_node_match = RouteNodeMatch(
+                    parent_match=parent_match,
+                    route_node=child_node,
+                    var_name=child_node.var_name,
+                    var_value="/".join(parts) if child_node.greedy else part,
+                )
+
+                if child_node.is_final:
+                    if child_node.greedy or child_node.depth == current_depth:
+                        yield route_node_match
+
+                    return
+
+                yield from self.find_potential_matches(
+                    current_depth + 1,
+                    route_node_match,
+                    parts[1:],
+                    child_node,
+                )
 
     def match(self, request: Request) -> RouteMatch:
-        parts = request.path.strip("/").split("/")
+        if request.path in self.static_routes:
+            return RouteMatch(
+                path_variables={},
+                route=self.static_routes[request.path],
+            )
 
-        matched = self.match_recursive(
+        parts = request.path.split("/")
+
+        matched = self.find_potential_matches(
             current_depth=1,
             parent_match=None,
             parts=parts,
             route_node=self.root_node,
         )
 
-        final_matches: list[RouteNodeMatch] = []
-
-        for match in matched:
-            if match.route_node.is_final:
-                final_matches.append(match)
-
-        if len(final_matches) < 1:
-            return self.not_found(request)
+        final_matches: list[RouteNodeMatch] = list(matched)
 
         if len(final_matches) > 1:
             raise Exception("multiple route matches found")
 
+        if len(final_matches) < 1:
+            return self.not_found(request)
+
         final_match: Optional[RouteNodeMatch] = final_matches[0]
 
-        if not final_match:
-            raise Exception("route not found")
+        if not final_match or not final_match.route_node.route:
+            return self.not_found(request)
 
         final_match_route = final_match.route_node.route
-
-        if not final_match_route:
-            raise Exception("route not found")
 
         path_variables = {}
 
@@ -60,50 +95,12 @@ class Router:
             route=final_match_route,
         )
 
-    def match_recursive(
-        self,
-        current_depth: int,
-        parent_match: Optional[RouteNodeMatch],
-        parts: list[str],
-        route_node: RouteNode,
-    ) -> list[RouteNodeMatch]:
-        if not parts:
-            return []
-
-        part = parts[0]
-        matches = []
-
-        for child_node in route_node.child_nodes:
-            if child_node.is_part_matching(part):
-                route_node_match = RouteNodeMatch(
-                    parent_match=parent_match,
-                    route_node=child_node,
-                    var_name=child_node.var_name,
-                    var_value="/".join(parts) if child_node.greedy else part,
-                )
-
-                matches.append(route_node_match)
-
-                if child_node.is_final:
-                    return matches
-
-                matches.extend(
-                    self.match_recursive(
-                        current_depth + 1,
-                        route_node_match,
-                        parts[1:],
-                        child_node,
-                    )
-                )
-
-        return matches
-
     def not_found(self, request: Request) -> RouteMatch:
         return RouteMatch(
             path_variables={},
             route=Route(
                 name=None,
-                pattern=request.path,
+                pattern=RoutePattern(request.path),
                 responder=self.not_found_responder,
             ),
         )
@@ -112,15 +109,18 @@ class Router:
         self,
         route: Route,
     ) -> None:
-        parts = route.pattern.strip("/").split("/")
+        if route.pattern.is_static:
+            self.static_routes[route.pattern.pattern] = route
 
-        self.register_route_recursive(
-            route,
-            self.root_node,
-            parts,
+            return
+
+        self.register_dynamic_route(
+            route=route,
+            route_node=self.root_node,
+            parts=route.pattern.parts,
         )
 
-    def register_route_recursive(
+    def register_dynamic_route(
         self,
         route: Route,
         route_node: RouteNode,
@@ -154,7 +154,7 @@ class Router:
 
         route_node.add_child(child_node=child_node)
 
-        return self.register_route_recursive(
+        return self.register_dynamic_route(
             route=route,
             route_node=child_node,
             parts=parts[1:],

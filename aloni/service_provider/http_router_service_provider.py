@@ -5,6 +5,7 @@ from ..http.not_found_responder import NotFoundResponder
 from ..http.responder import Responder
 from ..http.responder_caller import ResponderCaller
 from ..http.route import Route
+from ..http.route_pattern import RoutePattern
 from ..http.router import Router
 from ..role.responds_to_http import responds_to_http
 from ..role.service_provider import service_provider
@@ -47,7 +48,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
             router.register_route(
                 Route(
                     name=role.name,
-                    pattern=role.pattern,
+                    pattern=RoutePattern(role.pattern),
                     responder=responder,
                 )
             )
