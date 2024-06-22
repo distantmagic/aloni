@@ -5,6 +5,7 @@ from ..http.not_found_responder import NotFoundResponder
 from ..http.responder import Responder
 from ..http.responder_caller import ResponderCaller
 from ..http.route import Route
+from ..http.route_dynamic_matcher import RouteDynamicMatcher
 from ..http.route_pattern import RoutePattern
 from ..http.router import Router
 from ..role.responds_to_http import responds_to_http
@@ -21,6 +22,7 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         exception_responder: ExceptionResponder,
         not_found_responder: NotFoundResponder,
         responder_caller: ResponderCaller,
+        route_dynamic_matcher: RouteDynamicMatcher,
         service_collection: Annotated[
             ServiceColletion,
             HasRole(responds_to_http),
@@ -31,10 +33,14 @@ class HttpRouterServiceProvider(ServiceProvider[Router]):
         self.exception_responder = exception_responder
         self.not_found_responder = not_found_responder
         self.responder_caller = responder_caller
+        self.route_dynamic_matcher = route_dynamic_matcher
         self.service_collection = service_collection
 
     async def provide(self) -> Router:
-        router = Router(not_found_responder=self.not_found_responder)
+        router = Router(
+            not_found_responder=self.not_found_responder,
+            route_dynamic_matcher=self.route_dynamic_matcher,
+        )
 
         for role, responder in self.service_collection:
             if not isinstance(role, responds_to_http):

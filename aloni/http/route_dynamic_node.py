@@ -3,7 +3,7 @@ from typing import Optional, Self
 from .route import Route
 
 
-class RouteNode:
+class RouteDynamicNode:
     def __init__(
         self,
         depth: int = 0,
