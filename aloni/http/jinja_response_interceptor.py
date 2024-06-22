@@ -19,7 +19,7 @@ class JinjaResponseInterceptor(ResponseInterceptor[JinjaResponse]):
         template = self.environment.get_template(response.template_filename)
 
         return TextResponse(
-            content=await template.render_async(),
+            content=await template.render_async(**response.data),
             content_type="text/html",
             status=response.get_status(),
         )

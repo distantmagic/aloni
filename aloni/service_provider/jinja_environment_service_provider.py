@@ -1,5 +1,5 @@
 from typing import Annotated
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
 
 from ..application_state import ApplicationState
 from ..jinja_function.jinja_function import JinjaFunction
@@ -27,12 +27,13 @@ class JinjaEnvironmentServiceProvider(ServiceProvider[Environment]):
 
     async def provide(self) -> Environment:
         environment = Environment(
+            autoescape=select_autoescape(),
             auto_reload=False,
             enable_async=True,
             loader=PackageLoader(
                 self.application_state.root_module.__name__,
             ),
-            autoescape=select_autoescape(),
+            undefined=StrictUndefined,
         )
 
         for role, func in self.jinja_function_collection:
