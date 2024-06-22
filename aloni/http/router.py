@@ -33,13 +33,28 @@ class Router:
 
         potential_matches: list[RouteDynamicNodeMatch] = list(matched)
 
+        final_match: Optional[RouteDynamicNodeMatch] = None
+
         if len(potential_matches) > 1:
-            raise Exception("multiple route matches found")
+            for match in potential_matches:
+                if match.route_node.route is None:
+                    continue
 
-        if len(potential_matches) < 1:
+                if final_match is None:
+                    final_match = match
+                else:
+                    dynamic_diff = match.get_dynamic_difference(final_match)
+
+                    if dynamic_diff < 0:
+                        final_match = match
+                    elif dynamic_diff > 0:
+                        continue
+                    else:
+                        raise Exception("ambiguous route matches")
+        elif len(potential_matches) < 1:
             return self.not_found(request)
-
-        final_match: Optional[RouteDynamicNodeMatch] = potential_matches[0]
+        else:
+            final_match = potential_matches[0]
 
         if not final_match or not final_match.route_node.route:
             return self.not_found(request)
@@ -64,6 +79,9 @@ class Router:
         route: Route,
     ) -> None:
         if route.pattern.is_static:
+            if route.pattern.pattern in self.static_routes:
+                raise Exception("route already exists: {route.pattern.pattern}")
+
             self.static_routes[route.pattern.pattern] = route
 
             return

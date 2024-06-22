@@ -26,3 +26,15 @@ class RouteDynamicNodeMatch:
             match = match.parent_match
 
         return path_variables
+
+    def get_dynamic_difference(self, other: Self) -> int:
+        if self.route_node.route is None:
+            raise Exception("route node has no route assigned")
+
+        if other.route_node.route is None:
+            raise Exception("other route node has no route assigned")
+
+        return (
+            self.route_node.route.pattern.total_dynamic_parts
+            - other.route_node.route.pattern.total_dynamic_parts
+        )
