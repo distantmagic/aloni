@@ -7,7 +7,7 @@ repository = "https://github.com/distantmagic/aloni"
 
 [tool.poetry]
 name = "aloni"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = ["Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>"]
 readme = "README.md"

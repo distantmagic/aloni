@@ -114,7 +114,7 @@ from aloni.http import Responder, TextResponse
 from aloni.role import responds_to_http
 
 
-@responds_to_http(path='/ping')
+@responds_to_http(pattern='/ping')
 class Ping(Responder):
     async def respond(self) -> TextResponse:
         return TextResponse("pong")
@@ -133,7 +133,7 @@ from aloni.http import Responder, JinjaResponse
 from aloni.role import responds_to_http
 
 
-@responds_to_http(path='/hello')
+@responds_to_http(pattern='/hello')
 class Hello(Responder):
     async def respond(self) -> JinjaResponse:
         return JinjaResponse('hello.j2')
